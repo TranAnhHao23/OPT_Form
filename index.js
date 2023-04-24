@@ -2,9 +2,26 @@ function sendEmail() {
     let name = document.getElementById("account_name").value;
     let phone = document.getElementById("account_phone").value;
     let regisBranch = document.getElementById("nganh_dang_ky").value;
-    let subject = "New registration from" + name;
+    if (name === '' || phone === '' || regisBranch === 'none') {
+        alert("Vui lòng điền đầy đủ thông tin")
+        return
+    }
+    let email = 'trananhhaonuce@gmail.com'
+    let subject = name + " đã để lại thông tin. Tư vấn miễn phí theo các thông tin dưới đây";
     let body = "Họ và tên: " + name + "\n" +
                 "Số điện thoại: " + phone + "\n" +
                 "Ngành đăng ký: " + regisBranch
-        window.open("mailto:trananhhaonuce@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body))
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:3000/send-email');
+    xhr.setRequestHeader('Content-Type', 'application/json')
+
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            alert(xhr.response)
+        } else {
+            alert('Error sending email')
+        }
+    }
+
+    xhr.send(JSON.stringify({name, email, subject, body} ))
 }
